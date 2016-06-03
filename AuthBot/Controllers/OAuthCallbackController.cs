@@ -78,7 +78,7 @@
                     data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
                     data.SetProperty(ContextConstants.MagicNumberValidated, "false");
 
-                    await client.Bots.SetPerUserInConversationDataAsync(resumptionCookie.BotId, resumptionCookie.ConversationId, resumptionCookie.UserId, data);
+                    await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
 
                     var reply = await Conversation.ResumeAsync(resumptionCookie, message);
 

@@ -16,7 +16,7 @@
         {
             AuthResult authResult;
 
-            if (context.PerUserInConversationData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
+            if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
             {
                 DateTime expires = new DateTime(authResult.ExpiresOnUtcTicks);
 
@@ -77,14 +77,14 @@
 
         public static void StoreAuthResult(this IBotContext context, AuthResult authResult)
         {
-            context.PerUserInConversationData.SetValue(ContextConstants.AuthResultKey, authResult);
+            context.UserData.SetValue(ContextConstants.AuthResultKey, authResult);
         }
 
         public static async Task Logout(this IBotContext context)
         {
-            context.PerUserInConversationData.RemoveValue(ContextConstants.AuthResultKey);
-            context.PerUserInConversationData.RemoveValue(ContextConstants.MagicNumberKey);
-            context.PerUserInConversationData.RemoveValue(ContextConstants.MagicNumberValidated);
+            context.UserData.RemoveValue(ContextConstants.AuthResultKey);
+            context.UserData.RemoveValue(ContextConstants.MagicNumberKey);
+            context.UserData.RemoveValue(ContextConstants.MagicNumberValidated);
             string signoutURl = "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=" + System.Net.WebUtility.UrlEncode(AuthSettings.RedirectUrl);
 
             await context.PostAsync($"In order to finish the sign out, please click at this [link]({signoutURl}).");

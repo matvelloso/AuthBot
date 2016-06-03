@@ -57,8 +57,8 @@
 
             var message = await item;
 
-            context.PerUserInConversationData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
-            context.PerUserInConversationData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
+            context.UserData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
+            context.UserData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
 
             if (message.Text == "logon")
             {
@@ -121,8 +121,8 @@
         //    if (result)
         //    {
         //        //var message = context.MakeMessage();
-        //        //message.From = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageFromKey);
-        //        //message.To = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageToKey);
+        //        //message.From = context.UserData.Get<ChannelAccount>(ContextConstants.CurrentMessageFromKey);
+        //        //message.To = context.UserData.Get<ChannelAccount>(ContextConstants.CurrentMessageToKey);
                
         //        context.Logout();
         //       // await context.Forward(new AzureAuthDialog(), this.ResumeAfterAuth, message, CancellationToken.None);

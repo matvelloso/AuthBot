@@ -24,18 +24,18 @@
             AuthResult authResult;
             string validated="";
             int magicNumber = 0;
-            if (context.PerUserInConversationData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
+            if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
             {
-                context.PerUserInConversationData.TryGetValue<string>(ContextConstants.MagicNumberValidated, out validated);
+                context.UserData.TryGetValue<string>(ContextConstants.MagicNumberValidated, out validated);
                 if (validated == "true")
                 {
                     context.Done($"Thanks {authResult.UserName}. You are now logged in. ");
                 }
-                else if (context.PerUserInConversationData.TryGetValue<int>(ContextConstants.MagicNumberKey, out magicNumber))
+                else if (context.UserData.TryGetValue<int>(ContextConstants.MagicNumberKey, out magicNumber))
                 { 
                     if (msg.Text==magicNumber.ToString())
                     {
-                        context.PerUserInConversationData.SetValue<string>(ContextConstants.MagicNumberValidated, "true");
+                        context.UserData.SetValue<string>(ContextConstants.MagicNumberValidated, "true");
                         context.Done($"Thanks {authResult.UserName}. You are now logged in. ");
                     }
                     else if (msg.Text==null)
@@ -45,9 +45,9 @@
                         context.Wait(this.MessageReceivedAsync);
                     }else
                     {
-                        context.PerUserInConversationData.RemoveValue(ContextConstants.AuthResultKey);
-                        context.PerUserInConversationData.SetValue<string>(ContextConstants.MagicNumberValidated, "false");
-                        context.PerUserInConversationData.RemoveValue(ContextConstants.MagicNumberKey);
+                        context.UserData.RemoveValue(ContextConstants.AuthResultKey);
+                        context.UserData.SetValue<string>(ContextConstants.MagicNumberValidated, "false");
+                        context.UserData.RemoveValue(ContextConstants.MagicNumberKey);
                         context.Done($"I'm sorry but I couldn't validate your number. Please try authenticating once again. ");
                     }
                 }
