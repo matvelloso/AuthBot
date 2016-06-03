@@ -80,10 +80,16 @@
             context.PerUserInConversationData.SetValue(ContextConstants.AuthResultKey, authResult);
         }
 
-        public static void Logout(this IBotContext context)
+        public static async Task Logout(this IBotContext context)
         {
             context.PerUserInConversationData.RemoveValue(ContextConstants.AuthResultKey);
-        }    
+            context.PerUserInConversationData.RemoveValue(ContextConstants.MagicNumberKey);
+            context.PerUserInConversationData.RemoveValue(ContextConstants.MagicNumberValidated);
+            string signoutURl = "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=" + System.Net.WebUtility.UrlEncode(AuthSettings.RedirectUrl);
+
+            await context.PostAsync($"In order to finish the sign out, please click at this [link]({signoutURl}).");
+
+        }
 
     }
 }

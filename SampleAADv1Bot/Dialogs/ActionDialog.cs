@@ -60,7 +60,7 @@
             context.PerUserInConversationData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
             context.PerUserInConversationData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
 
-            if (message.Text == "Logon")
+            if (message.Text == "logon")
             {
 
                 if (string.IsNullOrEmpty(await context.GetAccessToken()))
@@ -86,6 +86,13 @@
 
                
             }
+            else if (message.Text == "logout")
+            {
+
+                await context.Logout();
+
+                context.Wait(this.MessageReceivedAsync);
+            }
             else
             {
                 context.Wait(MessageReceivedAsync);
@@ -107,22 +114,22 @@
             // await this.UseSubscriptionAsync(context, new LuisResult());
         }
      
-        private async Task OnLogoutRequested(IDialogContext context, IAwaitable<bool> confirmation)
-        {
-            var result = await confirmation;
+        //private async Task OnLogoutRequested(IDialogContext context, IAwaitable<bool> confirmation)
+        //{
+        //    var result = await confirmation;
 
-            if (result)
-            {
-                var message = context.MakeMessage();
-                message.From = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageFromKey);
-                message.To = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageToKey);
+        //    if (result)
+        //    {
+        //        //var message = context.MakeMessage();
+        //        //message.From = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageFromKey);
+        //        //message.To = context.PerUserInConversationData.Get<ChannelAccount>(ContextConstants.CurrentMessageToKey);
                
-                context.Logout();
-                await context.Forward(new AzureAuthDialog(), this.ResumeAfterAuth, message, CancellationToken.None);
-                return;
-            }
+        //        context.Logout();
+        //       // await context.Forward(new AzureAuthDialog(), this.ResumeAfterAuth, message, CancellationToken.None);
+        //        return;
+        //    }
 
-            context.Wait(MessageReceivedAsync);
-        }
+        //    //context.Wait(MessageReceivedAsync);
+        //}
     }
 }
