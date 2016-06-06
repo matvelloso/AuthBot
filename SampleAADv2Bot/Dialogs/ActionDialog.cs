@@ -67,24 +67,24 @@ namespace SampleAADV2Bot.Dialogs
             {
 
                 //endpoint v2
-                //if (string.IsNullOrEmpty(await context.GetAccessToken(scopes.Value)))
-                //{
-                //    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);
-                //}
-                //else
-                //{
-                //    context.Wait(MessageReceivedAsync);
-                //}
-
-                //endpoint v1
-                if (string.IsNullOrEmpty(await context.GetAccessToken(activeDirectoryResourceId.Value)))
+                if (string.IsNullOrEmpty(await context.GetAccessToken(scopes.Value)))
                 {
-                    await context.Forward(new AzureAuthDialog(activeDirectoryResourceId.Value), this.ResumeAfterAuth, message, CancellationToken.None);
+                    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);
                 }
                 else
                 {
                     context.Wait(MessageReceivedAsync);
                 }
+
+                //endpoint v1
+                //if (string.IsNullOrEmpty(await context.GetAccessToken(activeDirectoryResourceId.Value)))
+                //{
+                //    await context.Forward(new AzureAuthDialog(activeDirectoryResourceId.Value), this.ResumeAfterAuth, message, CancellationToken.None);
+                //}
+                //else
+                //{
+                //    context.Wait(MessageReceivedAsync);
+                //}
             }
             else if (message.Text == "echo")
             {
