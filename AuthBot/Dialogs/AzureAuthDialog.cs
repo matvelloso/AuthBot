@@ -11,7 +11,17 @@ namespace AuthBot.Dialogs
     [Serializable]
     public class AzureAuthDialog : IDialog<string>
     {
+        private string resourceId;
+        private string[] scopes;
 
+        public AzureAuthDialog(string resourceId)
+        {
+            this.resourceId = resourceId;
+        }
+        public AzureAuthDialog(string[] scopes)
+        {
+            this.scopes = scopes;
+        }
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -55,23 +65,25 @@ namespace AuthBot.Dialogs
             }
             else
             {
-                await this.LogIn(context, msg);
+                if (this.resourceId!=null)
+                    await this.LogIn(context, msg,resourceId);
+                else
+                    await this.LogIn(context, msg, scopes);
+                
             }
         }
 
-        private async Task LogIn(IDialogContext context, Message msg)
+        private async Task LogIn(IDialogContext context, Message msg, string[] scopes)
         {
             try
             {
-                string token = await context.GetAccessToken();
+                string token = await context.GetAccessToken(scopes);
 
                 if (string.IsNullOrEmpty(token))
                 {
                     var resumptionCookie = new ResumptionCookie(msg);
 
-                    var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie);
-
-
+                    var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie,scopes);
 
                     await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
 
@@ -86,6 +98,33 @@ namespace AuthBot.Dialogs
                 throw ex;
             }
         }
+        private async Task LogIn(IDialogContext context, Message msg, string resourceId)
+        {
+            try
+            {
+                string token = await context.GetAccessToken(resourceId);
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    var resumptionCookie = new ResumptionCookie(msg);
+
+                    var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie,resourceId);
+
+                    await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
+
+                    context.Wait(this.MessageReceivedAsync);
+                }
+                else
+                {
+                    context.Done(string.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
 

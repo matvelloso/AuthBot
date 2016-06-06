@@ -15,11 +15,7 @@ namespace AuthBot.Controllers
     using System.Configuration;
     public class OAuthCallbackController : ApiController
     {
-       
-
-       
-
-      
+ 
         [HttpGet]
         [Route("api/OAuthCallback")]
         public async Task<HttpResponseMessage> OAuthCallback([FromUri] string code, [FromUri] string state)
@@ -48,7 +44,6 @@ namespace AuthBot.Controllers
                 {
                     var client = scope.Resolve<IConnectorClient>();
                    
-
                     AuthResult authResult = null;
 
                     if (string.Equals(AuthSettings.Mode, "v1", StringComparison.OrdinalIgnoreCase))
@@ -61,9 +56,9 @@ namespace AuthBot.Controllers
                     }
                     else if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
                     {
-
+                        //TODO: Scopes definition here
                         // Exchange the Auth code with Access token
-                        var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache);
+                        var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache,new string[] { "User.Read" });
 
                         authResult = token;
                     }
@@ -87,16 +82,12 @@ namespace AuthBot.Controllers
                     reply.From = message.To;
 
                     await client.Messages.SendMessageAsync(reply);
-
-
+                    
                     var resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent($"<html><body>Almost done! Please copy this number and paste it back to your chat so your authentication can complete: {magicNumber}.</body></html>", System.Text.Encoding.UTF8, @"text/html");
                     return resp;
                 }
-
-             
-
-               
+              
             }
             catch (Exception ex)
             {

@@ -49,15 +49,12 @@ namespace AuthBot.Models
         }
         public void Load()
         {
-         
-            this.Deserialize((byte[])cache[CacheId]);
-         
+            if (cache.ContainsKey(CacheId))       
+                this.Deserialize((byte[])cache[CacheId]);
         }
 
         public void Persist()
         {
-          
-
             // Optimistically set HasStateChanged to false. We need to do it early to avoid losing changes made by a concurrent thread.
             this.HasStateChanged = false;
 

@@ -1,4 +1,4 @@
-﻿namespace SampleAADV1Bot
+﻿namespace SampleAADV2Bot
 {
     using System.Configuration;
     using System.Web.Http;

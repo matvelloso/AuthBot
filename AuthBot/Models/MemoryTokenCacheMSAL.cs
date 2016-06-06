@@ -49,9 +49,8 @@ namespace AuthBot.Models
         }
         public void Load()
         {
-         
-            this.Deserialize((byte[])cache[CacheId]);
-         
+            if (cache.ContainsKey(CacheId))
+                this.Deserialize((byte[])cache[CacheId]);     
         }
 
         public void Persist()

@@ -13,62 +13,77 @@ namespace AuthBot
     {
        
 
-        public static async Task<string> GetAccessToken(this IBotContext context)
+        public static async Task<string> GetAccessToken(this IBotContext context, string resourceId)
         {
             AuthResult authResult;
 
             if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
             {
-                DateTime expires = new DateTime(authResult.ExpiresOnUtcTicks);
 
-                if (DateTime.UtcNow >= expires)
+                try
                 {
-                    Trace.TraceInformation("Token Expired");
+                    InMemoryTokenCacheADAL tokenCache = new InMemoryTokenCacheADAL(authResult.TokenCache);
 
-                    try
+                    var result = await AzureActiveDirectoryHelper.GetToken(authResult.UserUniqueId, tokenCache, resourceId);
+
+                    authResult.AccessToken = result.AccessToken;
+                    authResult.ExpiresOnUtcTicks = result.ExpiresOnUtcTicks;
+                    authResult.TokenCache = tokenCache.Serialize();
+
+                    context.StoreAuthResult(authResult);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to renew token: " + ex.Message);
+
+                    await context.PostAsync("Your credentials expired and could not be renewed automatically!");
+                    await context.Logout();
+
+                    return null;
+                }
+
+
+                return authResult.AccessToken;
+            }
+
+            return null;
+        }
+        public static async Task<string> GetAccessToken(this IBotContext context, string[] scopes)
+        {
+            AuthResult authResult;
+
+            if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
+            {
+
+                try
+                {
+                    if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (string.Equals(AuthSettings.Mode, "v1", StringComparison.OrdinalIgnoreCase))
-                        {
-                            InMemoryTokenCacheADAL tokenCache = new InMemoryTokenCacheADAL(authResult.TokenCache);
+                        InMemoryTokenCacheMSAL tokenCache = new InMemoryTokenCacheMSAL(authResult.TokenCache);
 
-                            Trace.TraceInformation("Trying to renew token...");
-                            var result = await AzureActiveDirectoryHelper.GetToken(authResult.UserUniqueId, tokenCache);
+                        var result = await AzureActiveDirectoryHelper.GetToken(authResult.UserUniqueId, tokenCache, scopes);
 
-                            authResult.AccessToken = result.AccessToken;
-                            authResult.ExpiresOnUtcTicks = result.ExpiresOnUtcTicks;
-                            authResult.TokenCache = tokenCache.Serialize();
+                        authResult.AccessToken = result.AccessToken;
+                        authResult.ExpiresOnUtcTicks = result.ExpiresOnUtcTicks;
+                        authResult.TokenCache = tokenCache.Serialize();
 
-                            context.StoreAuthResult(authResult);
-                        }
-                        else if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
-                        {
-                            InMemoryTokenCacheMSAL tokenCache = new InMemoryTokenCacheMSAL(authResult.TokenCache);
-
-                            Trace.TraceInformation("Trying to renew token...");
-                            var result = await AzureActiveDirectoryHelper.GetToken(authResult.UserUniqueId, tokenCache);
-
-                            authResult.AccessToken = result.AccessToken;
-                            authResult.ExpiresOnUtcTicks = result.ExpiresOnUtcTicks;
-                            authResult.TokenCache = tokenCache.Serialize();
-
-                            context.StoreAuthResult(authResult);
-                        }
-                        else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
-                        {
-
-                        }
-                            Trace.TraceInformation("Token renewed!");
+                        context.StoreAuthResult(authResult);
                     }
-                    catch (Exception ex)
+                    else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
                     {
-                        Trace.TraceError("Failed to renew token: " + ex.Message);
-
-                        await context.PostAsync("Your credentials expired and could not be renewed automatically!");
-                        context.Logout();
-
-                        return null;
+                        throw new NotImplementedException();
                     }
                 }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to renew token: " + ex.Message);
+
+                    await context.PostAsync("Your credentials expired and could not be renewed automatically!");
+                    await context.Logout();
+
+                    return null;
+                }
+
 
                 return authResult.AccessToken;
             }

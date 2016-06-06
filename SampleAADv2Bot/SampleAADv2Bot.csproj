@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}</ProjectGuid>
+    <ProjectGuid>{DFDC62CE-993B-461E-99DB-F079F46105C5}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SampleAADV1Bot</RootNamespace>
-    <AssemblyName>SampleAADV1Bot</AssemblyName>
+    <RootNamespace>SampleAADV2Bot</RootNamespace>
+    <AssemblyName>SampleAADV2Bot</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />

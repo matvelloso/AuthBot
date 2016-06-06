@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
-namespace SampleAADV1Bot.Dialogs
+namespace SampleAADV2Bot.Dialogs
 {
     using System;
     using System.Collections.Generic;
@@ -40,6 +40,9 @@ namespace SampleAADV1Bot.Dialogs
             //endpoint v1
             var accessToken = await context.GetAccessToken(activeDirectoryResourceId.Value);
 
+            //endpoint v2
+            //var accessToken = await context.GetAccessToken(scopes.Value);
+
             if (string.IsNullOrEmpty(accessToken))
             {
                 return;
@@ -62,6 +65,17 @@ namespace SampleAADV1Bot.Dialogs
 
             if (message.Text == "logon")
             {
+
+                //endpoint v2
+                //if (string.IsNullOrEmpty(await context.GetAccessToken(scopes.Value)))
+                //{
+                //    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);
+                //}
+                //else
+                //{
+                //    context.Wait(MessageReceivedAsync);
+                //}
+
                 //endpoint v1
                 if (string.IsNullOrEmpty(await context.GetAccessToken(activeDirectoryResourceId.Value)))
                 {

@@ -1,22 +1,35 @@
 ﻿// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AuthBot.Models
+namespace SampleAADV2Bot
 {
-    public class AuthSettings
+    using System.Web.Http;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+
+    public static class WebApiConfig
     {
-        public static string ClientId { get; set; }
-        public static string ClientSecret { get; set; }
-        public static string EndpointUrl { get; set; }
-        public static string Tenant { get; set; }
-        public static string RedirectUrl { get; set; }
-        public static string Mode { get; set; }
+        public static void Register(HttpConfiguration config)
+        {
+            // Json settings
+            config.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Formatting = Formatting.Indented;
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+            };
 
+            // Web API configuration and services
 
+            // Web API routes
+            config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional });
+        }
     }
 }
 
