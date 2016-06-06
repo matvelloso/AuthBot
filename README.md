@@ -4,7 +4,7 @@ AuthBot is a .Net library for Azure Active Directory authentication on bots buil
 
 The goals are:
 
-* Support endpoints V1, V2 and B2C (currently only working with v1, we're working on the new MSAL to enable v2 and B2C)
+* Support endpoints V1, V2 and B2C (currently only working with v1 and v2, we're still working on the B2C scenario)
 
 * Allow easy and secure sign in, even in chat sessions including multiple users
 
