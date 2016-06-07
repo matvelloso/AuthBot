@@ -2,7 +2,7 @@
 <package  >
     <metadata>
         <id>AuthBot</id>
-        <version>0.0.5-alpha</version>
+        <version>0.0.6-alpha</version>
         <title>AuthBot</title>
         <authors>Mat Velloso</authors>
         <owners>NA</owners>
