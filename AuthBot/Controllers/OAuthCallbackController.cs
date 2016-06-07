@@ -66,17 +66,21 @@ namespace AuthBot.Controllers
                     {
                     }
 
-
-                    var data = await client.Bots.GetPerUserConversationDataAsync(resumptionCookie.BotId, resumptionCookie.ConversationId, resumptionCookie.UserId);
-
-                    data.SetProperty(ContextConstants.AuthResultKey, authResult);
-                    int magicNumber = GenerateRandomNumber();
-                    data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
-                    data.SetProperty(ContextConstants.MagicNumberValidated, "false");
-
-                    await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
-
                     var reply = await Conversation.ResumeAsync(resumptionCookie, message);
+                   
+                    var data = await client.Bots.GetPerUserConversationDataAsync(resumptionCookie.BotId, resumptionCookie.ConversationId, resumptionCookie.UserId);
+                    reply.SetBotUserData(ContextConstants.AuthResultKey, authResult);
+                    int magicNumber = GenerateRandomNumber();
+                    reply.SetBotUserData(ContextConstants.MagicNumberKey, magicNumber);
+                    reply.SetBotUserData(ContextConstants.MagicNumberValidated, "false");
+
+                    //data.SetProperty(ContextConstants.AuthResultKey, authResult);
+                    //data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
+                    //data.SetProperty(ContextConstants.MagicNumberValidated, "false");
+                    
+                    //await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
+
+                   
 
                     reply.To = message.From;
                     reply.From = message.To;
