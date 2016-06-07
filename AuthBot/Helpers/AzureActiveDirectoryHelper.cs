@@ -55,7 +55,7 @@ namespace AuthBot.Helpers
                     "&client_id=" + AuthSettings.ClientId +
                     "&client_secret=" + AuthSettings.ClientSecret +
                     "&redirect_uri=" + HttpUtility.UrlEncode(AuthSettings.RedirectUrl) +
-                    "&scope=" + "openid profile " + string.Join(" ",scopes) +
+                    "&scope=" + HttpUtility.UrlEncode("openid profile " + string.Join(" ",scopes)) +
                     "&state=" + encodedCookie;
 
 

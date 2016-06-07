@@ -43,6 +43,8 @@ namespace OneDriveBot.Dialogs
 
             context.UserData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
             context.UserData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
+           // await context.PostAsync(message.Text);
+
 
             if (string.Equals(message.Text, "help", StringComparison.OrdinalIgnoreCase))
             {
