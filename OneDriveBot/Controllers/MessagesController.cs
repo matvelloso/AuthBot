@@ -45,7 +45,7 @@ namespace OneDriveBot
             else if (message.Type == "BotAddedToConversation" || message.Type== "UserAddedToConversation")
             {
                 Message reply = message.CreateReplyMessage();
-                reply.Type = "Hi! I'm a simple OneDrive for Business bot. Just type the keywords you are looking for and I'll search your OneDrive for Business for files.";
+                reply.Text = "Hi! I'm a simple OneDrive for Business bot. Just type the keywords you are looking for and I'll search your OneDrive for Business for files.";
                 return reply;
             }
             else if (message.Type == "BotRemovedFromConversation")
