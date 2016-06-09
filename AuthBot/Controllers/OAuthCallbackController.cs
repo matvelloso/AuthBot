@@ -43,7 +43,7 @@ namespace AuthBot.Controllers
                 using (var scope = DialogModule.BeginLifetimeScope(Conversation.Container, message))
                 {
                     var client = scope.Resolve<IConnectorClient>();
-                   
+                 
                     AuthResult authResult = null;
 
                     if (string.Equals(AuthSettings.Mode, "v1", StringComparison.OrdinalIgnoreCase))
@@ -58,7 +58,7 @@ namespace AuthBot.Controllers
                     {
                         //TODO: Scopes definition here
                         // Exchange the Auth code with Access token
-                        var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache,new string[] { "User.Read" });
+                        var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache,Models.AuthSettings.Scopes);
 
                         authResult = token;
                     }
@@ -66,19 +66,23 @@ namespace AuthBot.Controllers
                     {
                     }
 
-                    var reply = await Conversation.ResumeAsync(resumptionCookie, message);
-                   
-                    var data = await client.Bots.GetPerUserConversationDataAsync(resumptionCookie.BotId, resumptionCookie.ConversationId, resumptionCookie.UserId);
-                    reply.SetBotUserData(ContextConstants.AuthResultKey, authResult);
-                    int magicNumber = GenerateRandomNumber();
-                    reply.SetBotUserData(ContextConstants.MagicNumberKey, magicNumber);
-                    reply.SetBotUserData(ContextConstants.MagicNumberValidated, "false");
-
-                    //data.SetProperty(ContextConstants.AuthResultKey, authResult);
-                    //data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
-                    //data.SetProperty(ContextConstants.MagicNumberValidated, "false");
                     
-                    //await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
+                   
+                    var data = await client.Bots.GetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId );
+                    int magicNumber = GenerateRandomNumber();
+                    data.SetProperty(ContextConstants.AuthResultKey, authResult);
+                    data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
+                    data.SetProperty(ContextConstants.MagicNumberValidated, "false");
+
+                    await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
+                    var reply = await Conversation.ResumeAsync(resumptionCookie, message);
+
+                    //reply.SetBotUserData(ContextConstants.AuthResultKey, authResult);
+                    
+                    //reply.SetBotUserData(ContextConstants.MagicNumberKey, magicNumber);
+                    //reply.SetBotUserData(ContextConstants.MagicNumberValidated, "false");
+
+                   
 
                    
 

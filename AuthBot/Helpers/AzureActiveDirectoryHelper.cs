@@ -51,18 +51,18 @@ namespace AuthBot.Helpers
                     tokenCache);
 
 
-                var uri = "https://login.microsoftonline.com/" + AuthSettings.Tenant + "/oauth2/v2.0/authorize?response_type=code" +
-                    "&client_id=" + AuthSettings.ClientId +
-                    "&client_secret=" + AuthSettings.ClientSecret +
-                    "&redirect_uri=" + HttpUtility.UrlEncode(AuthSettings.RedirectUrl) +
-                    "&scope=" + HttpUtility.UrlEncode("openid profile " + string.Join(" ",scopes)) +
-                    "&state=" + encodedCookie;
+                //var uri = "https://login.microsoftonline.com/" + AuthSettings.Tenant + "/oauth2/v2.0/authorize?response_type=code" +
+                //    "&client_id=" + AuthSettings.ClientId +
+                //    "&client_secret=" + AuthSettings.ClientSecret +
+                //    "&redirect_uri=" + HttpUtility.UrlEncode(AuthSettings.RedirectUrl) +
+                //    "&scope=" + HttpUtility.UrlEncode("openid profile " + string.Join(" ", scopes)) +
+                //    "&state=" + encodedCookie;
 
 
-                //var uri = await client.GetAuthorizationRequestUrlAsync(
-                //    new string[] { "openid", "offline_access" },
-                //    "AnyUser",
-                //    "state=" + encodedCookie);
+                var uri = await client.GetAuthorizationRequestUrlAsync(
+                   scopes,
+                    null,
+                    "state=" + encodedCookie);
 
 
                 return uri.ToString();

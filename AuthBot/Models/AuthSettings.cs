@@ -15,6 +15,7 @@ namespace AuthBot.Models
         public static string Tenant { get; set; }
         public static string RedirectUrl { get; set; }
         public static string Mode { get; set; }
+        public static string[] Scopes { get; set; }
 
 
     }
