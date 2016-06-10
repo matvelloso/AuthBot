@@ -85,7 +85,11 @@ namespace AuthBot.Dialogs
 
                     var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie,scopes);
 
-                    await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
+                    var reply = msg.CreateReplyMessage();
+                    reply.To = msg.From;
+                    reply.From = msg.To;
+                    reply.Text = $"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.";
+                    await context.PostAsync(reply);
 
                     context.Wait(this.MessageReceivedAsync);
                 }

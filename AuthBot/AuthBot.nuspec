@@ -2,7 +2,7 @@
 <package  >
     <metadata>
         <id>AuthBot</id>
-        <version>0.0.9-alpha</version>
+        <version>0.1.0-alpha</version>
         <title>AuthBot</title>
         <authors>Mat Velloso</authors>
         <owners>NA</owners>
@@ -11,6 +11,7 @@
         <description>Unofficial Azure Active Directory authentication library for bots built with Microsoft Bot Framework</description>
         <copyright>MIT License</copyright>
         <language>en-US</language>
+		<tags>bot framework authentication azure o365 office bots conversational microsoft</tags>
 		<dependencies>
   <dependency id="Autofac" version="3.5.2"  />
   <dependency id="autorest" version="0.16.0"  />

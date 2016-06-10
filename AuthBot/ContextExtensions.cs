@@ -39,11 +39,14 @@ namespace AuthBot
         public static async Task<string> GetAccessToken(this IBotContext context, string[] scopes)
         {
             AuthResult authResult;
+            string validated = null;
+            if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult) &&
+                context.UserData.TryGetValue(ContextConstants.MagicNumberValidated, out validated) &&
+                validated == "true")
+            { 
 
-            if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
-            {
-                try
-                {
+                    try
+                    {
                     if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
                     {
                         InMemoryTokenCacheMSAL tokenCache = new InMemoryTokenCacheMSAL(authResult.TokenCache);
