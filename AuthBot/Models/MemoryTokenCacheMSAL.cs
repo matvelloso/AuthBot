@@ -8,14 +8,10 @@ using System.Web;
 
 namespace AuthBot.Models
 {
-
-
     public class InMemoryTokenCacheMSAL : TokenCache
-    {
-     
+    {    
         string CacheId = string.Empty;
         private Dictionary<string, object> cache = new Dictionary<string, object>();
-
 
         public InMemoryTokenCacheMSAL()
         {
@@ -34,17 +30,13 @@ namespace AuthBot.Models
         }
 
         public void SaveUserStateValue(string state)
-        {
-          
+        {          
             cache[CacheId + "_state"] = state;
-        
         }
         public string ReadUserStateValue()
         {
-            string state = string.Empty;
-         
+            string state = string.Empty;         
             state=(string)cache[CacheId + "_state"];
-        
             return state;
         }
         public void Load()
@@ -55,14 +47,11 @@ namespace AuthBot.Models
 
         public void Persist()
         {
-          
-
             // Optimistically set HasStateChanged to false. We need to do it early to avoid losing changes made by a concurrent thread.
             this.HasStateChanged = false;
 
             // Reflect changes in the persistent store
-            cache[CacheId] = this.Serialize();
-        
+            cache[CacheId] = this.Serialize();        
         }
 
         // Empties the persistent store.

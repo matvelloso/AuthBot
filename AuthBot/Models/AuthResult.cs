@@ -7,17 +7,11 @@ namespace AuthBot.Models
     public class AuthResult
     {
         public string AccessToken { get; set; }
-
         public string UserName { get; set; }
-
         public string UserUniqueId { get; set; }
-
         public long ExpiresOnUtcTicks { get; set; }
-
         public byte[] TokenCache { get; set; }
      
-
-
         public static AuthResult FromADALAuthenticationResult(Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult authResult, Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache tokenCache)
         {
             var result = new AuthResult
@@ -34,7 +28,6 @@ namespace AuthBot.Models
 
         public static AuthResult FromMSALAuthenticationResult(Microsoft.Identity.Client.AuthenticationResult authResult, Microsoft.Identity.Client.TokenCache tokenCache)
         {
-
             var result = new AuthResult
             {
                 AccessToken = authResult.Token,
@@ -46,8 +39,6 @@ namespace AuthBot.Models
 
             return result;
         }
-
-
     }
 }
 //*********************************************************

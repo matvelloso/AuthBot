@@ -43,13 +43,10 @@ namespace OneDriveBot.Dialogs
 
             context.UserData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
             context.UserData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
-           // await context.PostAsync(message.Text);
-
 
             if (string.Equals(message.Text, "help", StringComparison.OrdinalIgnoreCase))
             {
                 await context.PostAsync("Hi! I'm a simple OneDrive for Business bot. Just type the keywords you are looking for and I'll search your OneDrive for Business for files.");
-
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (string.Equals(message.Text,"logout",StringComparison.OrdinalIgnoreCase))
@@ -62,20 +59,12 @@ namespace OneDriveBot.Dialogs
                 if (string.IsNullOrEmpty(await context.GetAccessToken(scopes.Value)))
                 {   
                     //We can't get an access token, so let's try to log the user in
-                    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);
-                  
+                    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);                  
                 }
                 else
                 {
                     var files = await SearchOneDrive(message.Text, await context.GetAccessToken(scopes.Value));
-
-                   
-
-                    
-
                     PromptDialog.Choice(context, FileSelectResult, files, "Which file do you want?");
-
-                   // context.Wait(MessageReceivedAsync);
                 }
                
             }
@@ -83,17 +72,14 @@ namespace OneDriveBot.Dialogs
 
         private async Task FileSelectResult(IDialogContext context, IAwaitable<Models.File> file)
         {
-
             string fileURL = (await file).WebURL;
             await context.PostAsync("Ok, here's link for the file:" + fileURL);
-
             context.Wait(MessageReceivedAsync);
         }
 
         private async Task<List<Models.File>> SearchOneDrive(string search,string token)
         {
             List<Models.File> files = new List<Models.File>();
-            // GET 
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -116,16 +102,13 @@ namespace OneDriveBot.Dialogs
                 }
                 return files;
             }
-
         }
 
         private async Task ResumeAfterAuth(IDialogContext context, IAwaitable<string> result)
         {
             var message = await result;
             await context.PostAsync(message);
-
             await context.PostAsync("If you want me to log you off, just say \"logout\". Now what is it that you want me to search for?");
-
             context.Wait(MessageReceivedAsync);
         }
     }

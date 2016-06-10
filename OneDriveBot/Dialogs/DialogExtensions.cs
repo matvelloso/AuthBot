@@ -41,7 +41,6 @@ namespace OneDriveBot.Dialogs
             {
                 return query.Substring(recommendation.StartIndex.Value, recommendation.EndIndex.Value - recommendation.StartIndex.Value + 1);
             }
-
             return null;
         }
 

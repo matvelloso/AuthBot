@@ -111,7 +111,6 @@
     <Compile Include="Controllers\OAuthCallbackController.cs" />
     <Compile Include="Dialogs\AzureAuthDialog.cs" />
     <Compile Include="Helpers\AzureActiveDirectoryHelper.cs" />
-    <Compile Include="Helpers\UrlToken.cs" />
     <Compile Include="Models\AuthResult.cs" />
     <Compile Include="Models\AuthSettings.cs" />
     <Compile Include="Models\MemoryTokenCacheADAL.cs" />

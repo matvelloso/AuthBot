@@ -14,42 +14,30 @@ namespace AuthBot.Helpers
     using Models;
     public static class AzureActiveDirectoryHelper
     {
-      
-
         public static async Task<string> GetAuthUrlAsync(ResumptionCookie resumptionCookie, string resourceId)
         {
             var encodedCookie = UrlToken.Encode(resumptionCookie);
-
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
-            
                 Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext context = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext(AuthSettings.EndpointUrl + "/" + AuthSettings.Tenant);
-
                 var uri = await context.GetAuthorizationRequestUrlAsync(
                     resourceId,
                     AuthSettings.ClientId,
                     redirectUri,
                     Microsoft.IdentityModel.Clients.ActiveDirectory.UserIdentifier.AnyUser,
                     "state=" + encodedCookie);
-
-                return uri.ToString();
-       
+                return uri.ToString();       
         }
 
         public static async Task<string> GetAuthUrlAsync(ResumptionCookie resumptionCookie, string[] scopes)
         {
             var encodedCookie = UrlToken.Encode(resumptionCookie);
-
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
-
             if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
             {
-
                 InMemoryTokenCacheMSAL tokenCache = new InMemoryTokenCacheMSAL();
-
                 Microsoft.Identity.Client.ConfidentialClientApplication client = new Microsoft.Identity.Client.ConfidentialClientApplication(AuthSettings.ClientId, redirectUri.ToString(),
                     new Microsoft.Identity.Client.ClientCredential(AuthSettings.ClientSecret),
                     tokenCache);
-
 
                 //var uri = "https://login.microsoftonline.com/" + AuthSettings.Tenant + "/oauth2/v2.0/authorize?response_type=code" +
                 //    "&client_id=" + AuthSettings.ClientId +
@@ -63,8 +51,6 @@ namespace AuthBot.Helpers
                    scopes,
                     null,
                     "state=" + encodedCookie);
-
-
                 return uri.ToString();
             }
             else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
@@ -77,36 +63,24 @@ namespace AuthBot.Helpers
         public static async Task<AuthResult> GetTokenByAuthCodeAsync(string authorizationCode, Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache tokenCache)
         {
             Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext context = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext(AuthSettings.EndpointUrl + "/" + AuthSettings.Tenant, tokenCache);
-
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
-
             var result = await context.AcquireTokenByAuthorizationCodeAsync(authorizationCode, redirectUri, new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(AuthSettings.ClientId, AuthSettings.ClientSecret));
-
-            Trace.TraceInformation("Token Cache Count:" + context.TokenCache.Count);
-
             AuthResult authResult = AuthResult.FromADALAuthenticationResult(result, tokenCache);
             return authResult;
         }
         public static async Task<AuthResult> GetTokenByAuthCodeAsync(string authorizationCode, Microsoft.Identity.Client.TokenCache tokenCache, string[] scopes)
         {
-            Microsoft.Identity.Client.ConfidentialClientApplication client = new Microsoft.Identity.Client.ConfidentialClientApplication(AuthSettings.ClientId, AuthSettings.RedirectUrl, new Microsoft.Identity.Client.ClientCredential(AuthSettings.ClientSecret), tokenCache);
-            
+            Microsoft.Identity.Client.ConfidentialClientApplication client = new Microsoft.Identity.Client.ConfidentialClientApplication(AuthSettings.ClientId, AuthSettings.RedirectUrl, new Microsoft.Identity.Client.ClientCredential(AuthSettings.ClientSecret), tokenCache);            
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
-                       
             var result = await client.AcquireTokenByAuthorizationCodeAsync(scopes, authorizationCode);
-
             AuthResult authResult = AuthResult.FromMSALAuthenticationResult(result, tokenCache);
-          
-
             return authResult;
         }
 
         public static async Task<AuthResult> GetToken(string userUniqueId, Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache tokenCache, string resourceId)
         {
             Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext context = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext(AuthSettings.EndpointUrl + "/" + AuthSettings.Tenant, tokenCache);
-
             var result = await context.AcquireTokenSilentAsync(resourceId, new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(AuthSettings.ClientId, AuthSettings.ClientSecret), new Microsoft.IdentityModel.Clients.ActiveDirectory.UserIdentifier(userUniqueId, Microsoft.IdentityModel.Clients.ActiveDirectory.UserIdentifierType.UniqueId));
-
             AuthResult authResult = AuthResult.FromADALAuthenticationResult(result, tokenCache);
             return authResult;
         }

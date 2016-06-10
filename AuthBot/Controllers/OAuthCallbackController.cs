@@ -42,16 +42,12 @@ namespace AuthBot.Controllers
                
                 using (var scope = DialogModule.BeginLifetimeScope(Conversation.Container, message))
                 {
-                    var client = scope.Resolve<IConnectorClient>();
-                 
+                    var client = scope.Resolve<IConnectorClient>();                
                     AuthResult authResult = null;
-
                     if (string.Equals(AuthSettings.Mode, "v1", StringComparison.OrdinalIgnoreCase))
                     {
-
                         // Exchange the Auth code with Access token
                         var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache)tokenCache);
-
                         authResult = token;
                     }
                     else if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
@@ -59,7 +55,6 @@ namespace AuthBot.Controllers
                         //TODO: Scopes definition here
                         // Exchange the Auth code with Access token
                         var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache,Models.AuthSettings.Scopes);
-
                         authResult = token;
                     }
                     else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
@@ -77,15 +72,6 @@ namespace AuthBot.Controllers
                     await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
                     var reply = await Conversation.ResumeAsync(resumptionCookie, message);
 
-                    //reply.SetBotUserData(ContextConstants.AuthResultKey, authResult);
-                    
-                    //reply.SetBotUserData(ContextConstants.MagicNumberKey, magicNumber);
-                    //reply.SetBotUserData(ContextConstants.MagicNumberValidated, "false");
-
-                   
-
-                   
-
                     reply.To = message.From;
                     reply.From = message.To;
 
@@ -95,12 +81,11 @@ namespace AuthBot.Controllers
                     resp.Content = new StringContent($"<html><body>Almost done! Please copy this number and paste it back to your chat so your authentication can complete: {magicNumber}.</body></html>", System.Text.Encoding.UTF8, @"text/html");
                     return resp;
                 }
-              
             }
             catch (Exception ex)
             {
                 // Callback is called with no pending message as a result the login flow cannot be resumed.
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new InvalidOperationException("Cannot resume!"));
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
 
