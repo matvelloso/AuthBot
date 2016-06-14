@@ -13,6 +13,7 @@ namespace AuthBot.Models
         public static string ClientSecret { get; set; }
         public static string EndpointUrl { get; set; }
         public static string Tenant { get; set; }
+        public static string ResourceId { get; set; }
         public static string RedirectUrl { get; set; }
         public static string Mode { get; set; }
         public static string[] Scopes { get; set; }
