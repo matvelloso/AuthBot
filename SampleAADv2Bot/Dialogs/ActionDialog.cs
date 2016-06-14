@@ -60,9 +60,6 @@ namespace SampleAADV2Bot.Dialogs
 
             var message = await item;
 
-            context.UserData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
-            context.UserData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
-
             if (message.Text == "logon")
             {
 
