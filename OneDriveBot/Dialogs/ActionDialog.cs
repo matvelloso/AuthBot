@@ -3,35 +3,21 @@ namespace OneDriveBot.Dialogs
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Bot.Builder.Dialogs;
-    using Microsoft.Bot.Builder.FormFlow;
-    using Microsoft.Bot.Builder.Luis;
-    using Microsoft.Bot.Builder.Luis.Models;
-    using Microsoft.Bot.Connector;
-    using AuthBot;
-    using AuthBot.Dialogs;
-    using System.Configuration;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
+    using AuthBot;
+    using AuthBot.Dialogs;
+    using AuthBot.Models;
+    using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
+
     [Serializable]
     public class ActionDialog : IDialog<string>
     {
-      
-        private static Lazy<string> mode = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.Mode"]);
-        private static Lazy<string> activeDirectoryEndpointUrl = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.EndpointUrl"]);
-        private static Lazy<string> activeDirectoryTenant = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.Tenant"]);
-        private static Lazy<string> activeDirectoryResourceId = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]);
-        private static Lazy<string> redirectUrl = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.RedirectUrl"]);
-        private static Lazy<string> clientId = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.ClientId"]);
-        private static Lazy<string> clientSecret = new Lazy<string>(() => ConfigurationManager.AppSettings["ActiveDirectory.ClientSecret"]);
-        private static Lazy<string[]> scopes = new Lazy<string[]>(() => ConfigurationManager.AppSettings["ActiveDirectory.Scopes"].Split(','));
-
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -53,14 +39,14 @@ namespace OneDriveBot.Dialogs
             }
             else
             {   //Assume this is a query for OneDrive so let's get an access token
-                if (string.IsNullOrEmpty(await context.GetAccessToken(scopes.Value)))
+                if (string.IsNullOrEmpty(await context.GetAccessToken(AuthSettings.Scopes)))
                 {   
                     //We can't get an access token, so let's try to log the user in
-                    await context.Forward(new AzureAuthDialog(scopes.Value), this.ResumeAfterAuth, message, CancellationToken.None);                  
+                    await context.Forward(new AzureAuthDialog(AuthSettings.Scopes), this.ResumeAfterAuth, message, CancellationToken.None);                  
                 }
                 else
                 {
-                    var files = await SearchOneDrive(message.Text, await context.GetAccessToken(scopes.Value));
+                    var files = await SearchOneDrive(message.Text, await context.GetAccessToken(AuthSettings.Scopes));
                     PromptDialog.Choice(context, FileSelectResult, files, "Which file do you want?");
                 }
                
