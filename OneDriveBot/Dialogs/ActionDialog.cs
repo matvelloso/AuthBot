@@ -41,9 +41,6 @@ namespace OneDriveBot.Dialogs
         {
             var message = await item;
 
-            context.UserData.SetValue(ContextConstants.CurrentMessageFromKey, message.From);
-            context.UserData.SetValue(ContextConstants.CurrentMessageToKey, message.To);
-
             if (string.Equals(message.Text, "help", StringComparison.OrdinalIgnoreCase))
             {
                 await context.PostAsync("Hi! I'm a simple OneDrive for Business bot. Just type the keywords you are looking for and I'll search your OneDrive for Business for files.");
