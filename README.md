@@ -22,7 +22,7 @@ You can run the SampleAADv1Bot locally using Visual Studio and the Microsoft Bot
 * logout: clears state related to the authentication and generates a hyperlink for the user to to go and also logout from the web browser
 
 
-Note: This AuthBot library is also available as a Nuget package here: https://www.nuget.org/packages/AuthBot/0.0.5-alpha
+Note: This AuthBot library is also available as a Nuget package here: https://www.nuget.org/packages/AuthBot
 
 ## How do I set it up?
 
