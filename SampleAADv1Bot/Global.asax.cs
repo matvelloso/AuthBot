@@ -15,7 +15,7 @@
             AuthBot.Models.AuthSettings.RedirectUrl = ConfigurationManager.AppSettings["ActiveDirectory.RedirectUrl"];
             AuthBot.Models.AuthSettings.ClientId = ConfigurationManager.AppSettings["ActiveDirectory.ClientId"];
             AuthBot.Models.AuthSettings.ClientSecret = ConfigurationManager.AppSettings["ActiveDirectory.ClientSecret"];
-            AuthBot.Models.AuthSettings.ResourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
+            
 
         }
     }

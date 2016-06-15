@@ -59,7 +59,8 @@ namespace AuthBot.Dialogs
                         context.UserData.RemoveValue(ContextConstants.AuthResultKey);
                         context.UserData.SetValue<string>(ContextConstants.MagicNumberValidated, "false");
                         context.UserData.RemoveValue(ContextConstants.MagicNumberKey);
-                        context.Done($"I'm sorry but I couldn't validate your number. Please try authenticating once again. ");
+                        await context.PostAsync($"I'm sorry but I couldn't validate your number. Please try authenticating once again. ");
+                        context.Wait(this.MessageReceivedAsync);
                     }
                 }
             }

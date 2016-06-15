@@ -9,7 +9,7 @@ namespace SampleAADV1Bot.Dialogs
     using AuthBot.Models;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
-
+    using System.Configuration;
     [Serializable]
     public class ActionDialog : IDialog<string>
     {
@@ -21,7 +21,7 @@ namespace SampleAADV1Bot.Dialogs
         public async Task TokenSample(IDialogContext context)
         {
             //endpoint v1
-            var accessToken = await context.GetAccessToken(AuthSettings.ResourceId);
+            var accessToken = await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]);
 
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -40,9 +40,9 @@ namespace SampleAADV1Bot.Dialogs
             if (message.Text == "logon")
             {
                 //endpoint v1
-                if (string.IsNullOrEmpty(await context.GetAccessToken(AuthSettings.ResourceId)))
+                if (string.IsNullOrEmpty(await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"])))
                 {
-                    await context.Forward(new AzureAuthDialog(AuthSettings.ResourceId), this.ResumeAfterAuth, message, CancellationToken.None);
+                    await context.Forward(new AzureAuthDialog(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]), this.ResumeAfterAuth, message, CancellationToken.None);
                 }
                 else
                 {

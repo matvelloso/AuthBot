@@ -15,13 +15,33 @@ namespace AuthBot.Controllers
     using System.Configuration;
     public class OAuthCallbackController : ApiController
     {
- 
+
+        [HttpGet]
+        [Route("api/OAuthCallback")]
+        public async Task<HttpResponseMessage> OAuthCallback()
+        {
+            try
+            {
+               
+                    var resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent($"<html><body>You have been signed out. You can now close this window.</body></html>", System.Text.Encoding.UTF8, @"text/html");
+                    return resp;
+               
+            }
+            catch (Exception ex)
+            {
+                // Callback is called with no pending message as a result the login flow cannot be resumed.
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+
+        }
         [HttpGet]
         [Route("api/OAuthCallback")]
         public async Task<HttpResponseMessage> OAuthCallback([FromUri] string code, [FromUri] string state)
         {
             try
             {
+              
                 object tokenCache = null;
                 if (string.Equals(AuthSettings.Mode, "v1", StringComparison.OrdinalIgnoreCase))
                 {
