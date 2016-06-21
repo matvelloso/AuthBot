@@ -61,3 +61,4 @@ Then you need to set both this redirect URI, but also the client ID and secret t
 
 Common mistake: If you register an app in the v1 mode but try to run the OneDrive sample which uses v2, you will get an error. If the bot is configured for v2 you will have to register it using the new v2 portal as discussed above.
  
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
