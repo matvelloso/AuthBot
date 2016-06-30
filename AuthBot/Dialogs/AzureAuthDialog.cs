@@ -66,6 +66,7 @@ namespace AuthBot.Dialogs
             }
             else
             {
+
                 if (this.resourceId!=null)
                     await this.LogIn(context, msg,resourceId);
                 else
@@ -82,17 +83,25 @@ namespace AuthBot.Dialogs
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    var resumptionCookie = new ResumptionCookie(msg);
+                    if (msg.Text != null &&
+                        CancellationWords.GetCancellationWords().Contains(msg.Text.ToUpper()))
+                    {
+                        context.Done(string.Empty);
+                    }
+                    else
+                    {
+                        var resumptionCookie = new ResumptionCookie(msg);
 
-                    var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie,scopes);
+                        var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie, scopes);
 
-                    var reply = msg.CreateReplyMessage();
-                    reply.To = msg.From;
-                    reply.From = msg.To;
-                    reply.Text = $"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.";
-                    await context.PostAsync(reply);
+                        var reply = msg.CreateReplyMessage();
+                        reply.To = msg.From;
+                        reply.From = msg.To;
+                        reply.Text = $"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.";
+                        await context.PostAsync(reply);
 
-                    context.Wait(this.MessageReceivedAsync);
+                        context.Wait(this.MessageReceivedAsync);
+                    }
                 }
                 else
                 {
@@ -111,13 +120,21 @@ namespace AuthBot.Dialogs
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    var resumptionCookie = new ResumptionCookie(msg);
+                    if (msg.Text != null &&
+                      CancellationWords.GetCancellationWords().Contains(msg.Text.ToUpper()))
+                    {
+                        context.Done(string.Empty);
+                    }
+                    else
+                    {
+                        var resumptionCookie = new ResumptionCookie(msg);
 
-                    var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie,resourceId);
+                        var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie, resourceId);
 
-                    await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
+                        await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
 
-                    context.Wait(this.MessageReceivedAsync);
+                        context.Wait(this.MessageReceivedAsync);
+                    }
                 }
                 else
                 {

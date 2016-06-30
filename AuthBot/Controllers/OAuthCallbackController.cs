@@ -72,7 +72,6 @@ namespace AuthBot.Controllers
                     }
                     else if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
                     {
-                        //TODO: Scopes definition here
                         // Exchange the Auth code with Access token
                         var token = await AzureActiveDirectoryHelper.GetTokenByAuthCodeAsync(code, (Microsoft.Identity.Client.TokenCache)tokenCache,Models.AuthSettings.Scopes);
                         authResult = token;
