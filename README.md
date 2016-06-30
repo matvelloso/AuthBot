@@ -15,6 +15,8 @@ The goals are:
 
 ## How does it work?
 
+You might want to start by watching this video: https://channel9.msdn.com/Shows/Office-Dev-Show/Office-Dev-Show-Episode-34-Getting-Started-with-Bots-and-the-Microsoft-Graph 
+
 You can run the SampleAADv1Bot locally using Visual Studio and the Microsoft Bot Framework emulator. The sample allows the user to type the following commands:
 
 * logon: triggers the logon flow, which genrates a hyperlink. The user clicks at the hyperlink, does the normal OpenID connect flow and at the end a magic number is gnerated. The user copies the number back into the chat (this guarantees that the bot won't confuse different users if multiple users attempt to click at the same logon link)
@@ -61,3 +63,4 @@ Then you need to set both this redirect URI, but also the client ID and secret t
 
 Common mistake: If you register an app in the v1 mode but try to run the OneDrive sample which uses v2, you will get an error. If the bot is configured for v2 you will have to register it using the new v2 portal as discussed above.
  
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
