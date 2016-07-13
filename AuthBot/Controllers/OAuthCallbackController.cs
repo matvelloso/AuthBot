@@ -13,8 +13,13 @@ namespace AuthBot.Controllers
     using Microsoft.Bot.Connector;
     using Models;
     using System.Configuration;
+    using System.Threading;
+    using System.Security.Cryptography;
+
     public class OAuthCallbackController : ApiController
     {
+        private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+
 
         [HttpGet]
         [Route("api/OAuthCallback")]
@@ -37,7 +42,7 @@ namespace AuthBot.Controllers
         }
         [HttpGet]
         [Route("api/OAuthCallback")]
-        public async Task<HttpResponseMessage> OAuthCallback([FromUri] string code, [FromUri] string state)
+        public async Task<HttpResponseMessage> OAuthCallback([FromUri] string code, [FromUri] string state, CancellationToken cancellationToken)
         {
             try
             {
@@ -79,22 +84,18 @@ namespace AuthBot.Controllers
                     else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
                     {
                     }
-
                     
-                   
-                    var data = await client.Bots.GetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId );
+                    IStateClient sc = scope.Resolve<IStateClient>();
+
+                    var dataBag = scope.Resolve<IBotData>();
+                    await dataBag.LoadAsync(cancellationToken);
                     int magicNumber = GenerateRandomNumber();
-                    data.SetProperty(ContextConstants.AuthResultKey, authResult);
-                    data.SetProperty(ContextConstants.MagicNumberKey, magicNumber);
-                    data.SetProperty(ContextConstants.MagicNumberValidated, "false");
-
-                    await client.Bots.SetUserDataAsync(resumptionCookie.BotId, resumptionCookie.UserId, data);
-                    var reply = await Conversation.ResumeAsync(resumptionCookie, message);
-
-                    reply.To = message.From;
-                    reply.From = message.To;
-
-                    await client.Messages.SendMessageAsync(reply);
+                    dataBag.UserData.SetValue(ContextConstants.AuthResultKey, authResult);
+                    dataBag.UserData.SetValue(ContextConstants.MagicNumberKey, magicNumber);
+                    dataBag.UserData.SetValue(ContextConstants.MagicNumberValidated, "false");
+                    await dataBag.FlushAsync(cancellationToken);
+                  
+                    await Conversation.ResumeAsync(resumptionCookie, message);
                     
                     var resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent($"<html><body>Almost done! Please copy this number and paste it back to your chat so your authentication can complete: {magicNumber}.</body></html>", System.Text.Encoding.UTF8, @"text/html");
@@ -110,9 +111,18 @@ namespace AuthBot.Controllers
 
         private int GenerateRandomNumber()
         {
-            Random rnd = new Random();
-            return rnd.Next(10000, 100000);
+            int number = 0;
+            byte[] randomNumber = new byte[1];
+            do
+            {
+                rngCsp.GetBytes(randomNumber);
+                var digit = randomNumber[0] % 10;
+                number = number * 10 + digit;
+            } while (number.ToString().Length < 6);
+            return number;
+
         }
+
     }
 }
 

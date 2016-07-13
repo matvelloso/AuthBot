@@ -9,6 +9,7 @@ namespace SampleAADV2Bot
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.FormFlow;
     using Microsoft.Bot.Connector;
+    using System.Net.Http;
 
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -17,45 +18,27 @@ namespace SampleAADV2Bot
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
-        public async Task<Message> Post([FromBody]Message message)
+        [BotAuthentication]
+        public virtual async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (message.Type == "Message")
+            if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
-                return await Conversation.SendAsync(message, () => new ActionDialog());
+                await Conversation.SendAsync(activity, () => new ActionDialog());
             }
             else
             {
-                return this.HandleSystemMessage(message);
+                this.HandleSystemMessage(activity);
             }
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
         }
 
-        private Message HandleSystemMessage(Message message)
+        private Activity HandleSystemMessage(Activity message)
         {
-            if (message.Type == "Ping")
+            if (message.Type == ActivityTypes.Ping)
             {
-                Message reply = message.CreateReplyMessage();
-                reply.Type = "Ping";
+                Activity reply = message.CreateReply();
+                reply.Type = ActivityTypes.Ping;
                 return reply;
-            }
-            else if (message.Type == "DeleteUserData")
-            {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
-            }
-            else if (message.Type == "BotAddedToConversation")
-            {
-            }
-            else if (message.Type == "BotRemovedFromConversation")
-            {
-            }
-            else if (message.Type == "UserAddedToConversation")
-            {
-            }
-            else if (message.Type == "UserRemovedFromConversation")
-            {
-            }
-            else if (message.Type == "EndOfConversation")
-            {
             }
 
             return null;

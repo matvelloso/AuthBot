@@ -28,7 +28,7 @@ namespace AuthBot.Dialogs
             context.Wait(this.MessageReceivedAsync);
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<Message> argument)
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
         {
             var msg = await argument;
 
@@ -75,7 +75,7 @@ namespace AuthBot.Dialogs
             }
         }
 
-        private async Task LogIn(IDialogContext context, Message msg, string[] scopes)
+        private async Task LogIn(IDialogContext context, IMessageActivity msg, string[] scopes)
         {
             try
             {
@@ -93,12 +93,12 @@ namespace AuthBot.Dialogs
                         var resumptionCookie = new ResumptionCookie(msg);
 
                         var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie, scopes);
-
-                        var reply = msg.CreateReplyMessage();
-                        reply.To = msg.From;
-                        reply.From = msg.To;
-                        reply.Text = $"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.";
-                        await context.PostAsync(reply);
+                       
+                        //var reply = msg.CreateReply();
+                        //reply.Recipient = msg.From;
+                        //reply.From = msg.Recipient;
+                        //reply.Text = $"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.";
+                        await context.PostAsync($"You must be authenticated before you can proceed. Please, click [here]({authenticationUrl}) to log into your account.");
 
                         context.Wait(this.MessageReceivedAsync);
                     }
@@ -112,7 +112,7 @@ namespace AuthBot.Dialogs
                 throw ex;
             }
         }
-        private async Task LogIn(IDialogContext context, Message msg, string resourceId)
+        private async Task LogIn(IDialogContext context, IMessageActivity msg, string resourceId)
         {
             try
             {

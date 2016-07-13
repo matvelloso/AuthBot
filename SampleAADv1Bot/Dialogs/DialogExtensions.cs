@@ -49,14 +49,7 @@ namespace SampleAADV1Bot.Dialogs
         {
             if (!string.IsNullOrEmpty(messageText))
             {
-                var reply = context.MakeMessage();
-                reply.Text = messageText;
-
-                using (var scope = DialogModule.BeginLifetimeScope(Conversation.Container, reply))
-                {
-                    var client = scope.Resolve<IConnectorClient>();
-                    await client.Messages.SendMessageAsync(reply);
-                }
+                await context.PostAsync(messageText);
             }
         }
     }
