@@ -47,7 +47,7 @@ namespace OneDriveBot.Dialogs
                 else
                 {
                     var files = await SearchOneDrive(message.Text, await context.GetAccessToken(AuthSettings.Scopes));
-                    PromptDialog.Choice(context, FileSelectResult, files, "Which file do you want?");
+                    PromptDialog.Choice(context, FileSelectResult, files, "Which file do you want?",null,3,PromptStyle.PerLine);
                 }
                
             }
@@ -82,6 +82,7 @@ namespace OneDriveBot.Dialogs
                     f.Name = item.Value<string>("name");
                     f.WebURL = item.Value<string>("webUrl");
                     files.Add(f);
+                    
                 }
                 return files;
             }
