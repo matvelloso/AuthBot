@@ -19,7 +19,7 @@ namespace OneDriveBot.Models
         public override string ToString()
         {
             
-            return this.Name;
+            return this.Name.Length>10?this.Name.Substring(0,10):this.Name;
         }
     }
 }

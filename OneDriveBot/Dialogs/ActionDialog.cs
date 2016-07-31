@@ -27,6 +27,7 @@ namespace OneDriveBot.Dialogs
         {
             var message = await item;
 
+         
             if (string.Equals(message.Text, "help", StringComparison.OrdinalIgnoreCase))
             {
                 await context.PostAsync("Hi! I'm a simple OneDrive for Business bot. Just type the keywords you are looking for and I'll search your OneDrive for Business for files.");
@@ -82,6 +83,8 @@ namespace OneDriveBot.Dialogs
                     f.Name = item.Value<string>("name");
                     f.WebURL = item.Value<string>("webUrl");
                     files.Add(f);
+                    if (files.Count > 10)
+                        return files;
                     
                 }
                 return files;
