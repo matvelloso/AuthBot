@@ -43,6 +43,9 @@ namespace AuthBot.Dialogs
             int magicNumber = 0;
             if (context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult))
             {
+                //IMPORTANT: DO NOT REMOVE THE MAGIC NUMBER CHECK THAT WE DO HERE. THIS IS AN ABSOLUTE SECURITY REQUIREMENT
+                //REMOVING THIS WILL REMOVE YOUR BOT AND YOUR USERS TO SECURITY VULNERABILITIES. 
+                //MAKE SURE YOU UNDERSTAND THE ATTACK VECTORS AND WHY THIS IS IN PLACE.
                 context.UserData.TryGetValue<string>(ContextConstants.MagicNumberValidated, out validated);
                 if (validated == "true")
                 {
