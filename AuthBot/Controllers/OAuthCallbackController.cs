@@ -87,6 +87,9 @@ namespace AuthBot.Controllers
                     
                     IStateClient sc = scope.Resolve<IStateClient>();
 
+                    //IMPORTANT: DO NOT REMOVE THE MAGIC NUMBER CHECK THAT WE DO HERE. THIS IS AN ABSOLUTE SECURITY REQUIREMENT
+                    //REMOVING THIS WILL REMOVE YOUR BOT AND YOUR USERS TO SECURITY VULNERABILITIES. 
+                    //MAKE SURE YOU UNDERSTAND THE ATTACK VECTORS AND WHY THIS IS IN PLACE.
                     var dataBag = scope.Resolve<IBotData>();
                     await dataBag.LoadAsync(cancellationToken);
                     int magicNumber = GenerateRandomNumber();
