@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>AuthBot</id>
-    <version>3.0.3-alpha</version>
+    <version>3.1.0-alpha</version>
     <title>AuthBot</title>
     <authors>Mat Velloso</authors>
     <owners>NA</owners>
@@ -20,7 +20,7 @@
       <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.WebHost" version="5.2.3" />
-      <dependency id="Microsoft.Bot.Builder" version="3.0.1" />
+      <dependency id="Microsoft.Bot.Builder" version="3.1.0" />
       <dependency id="Microsoft.Identity.Client" version="1.0.304142221-alpha" />
       <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="3.12.0" />
       <dependency id="Microsoft.IdentityModel.Logging" version="1.0.0" />
