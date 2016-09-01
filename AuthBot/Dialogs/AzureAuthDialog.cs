@@ -103,7 +103,7 @@ namespace AuthBot.Dialogs
 
                         var authenticationUrl = await AzureActiveDirectoryHelper.GetAuthUrlAsync(resumptionCookie, scopes);
 
-                        if (msg.ChannelId == "skype")
+                        if (msg.ChannelId == "skype" )
                         {
                              IMessageActivity response = context.MakeMessage();
                              response.Recipient = msg.From;
@@ -126,7 +126,7 @@ namespace AuthBot.Dialogs
                         }
                         else
                         {
-                            await context.PostAsync(this.prompt + authenticationUrl);
+                            await context.PostAsync(this.prompt + "[Click here](" + authenticationUrl + ")");
                         }
                         context.Wait(this.MessageReceivedAsync);
                     }
