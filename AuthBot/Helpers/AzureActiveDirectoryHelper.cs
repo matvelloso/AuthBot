@@ -2,21 +2,18 @@
 namespace AuthBot.Helpers
 {
     using System;
-    using System.Configuration;
-    using System.Diagnostics;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using Microsoft.Bot.Builder.Dialogs;
-    using System.Net.Http;
-    using System.Text;
-    using System.Net.Http.Headers;
-    using System.Collections.Generic;
     using Models;
+
     public static class AzureActiveDirectoryHelper
     {
         public static async Task<string> GetAuthUrlAsync(ResumptionCookie resumptionCookie, string resourceId)
         {
-            var encodedCookie = UrlToken.Encode(resumptionCookie);
+            var extraParameters = BuildExtraParameters(resumptionCookie);
+
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
                 Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext context = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext(AuthSettings.EndpointUrl + "/" + AuthSettings.Tenant);
                 var uri = await context.GetAuthorizationRequestUrlAsync(
@@ -24,13 +21,13 @@ namespace AuthBot.Helpers
                     AuthSettings.ClientId,
                     redirectUri,
                     Microsoft.IdentityModel.Clients.ActiveDirectory.UserIdentifier.AnyUser,
-                    "state=" + encodedCookie);
+                    $"state={extraParameters}");
                 return uri.ToString();       
         }
 
         public static async Task<string> GetAuthUrlAsync(ResumptionCookie resumptionCookie, string[] scopes)
         {
-            var encodedCookie = UrlToken.Encode(resumptionCookie);
+            var extraParameters = BuildExtraParameters(resumptionCookie);
             Uri redirectUri = new Uri(AuthSettings.RedirectUrl);
             if (string.Equals(AuthSettings.Mode, "v2", StringComparison.OrdinalIgnoreCase))
             {
@@ -50,7 +47,7 @@ namespace AuthBot.Helpers
                 var uri = await client.GetAuthorizationRequestUrlAsync(
                    scopes,
                     null,
-                    "state=" + encodedCookie);
+                    $"state={extraParameters}");
                 return uri.ToString();
             }
             else if (string.Equals(AuthSettings.Mode, "b2c", StringComparison.OrdinalIgnoreCase))
@@ -93,6 +90,28 @@ namespace AuthBot.Helpers
             return authResult;
         }
 
+        public static string TokenEncoder(string token)
+        {
+            return HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(token));
+        }
+
+        public static string TokenDecoder(string token)
+        {
+            return Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(token));
+        }
+
+        private static string BuildExtraParameters(ResumptionCookie resumptionCookie)
+        {
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            queryString["userId"] = resumptionCookie.Address.UserId;
+            queryString["botId"] = resumptionCookie.Address.BotId;
+            queryString["conversationId"] = resumptionCookie.Address.ConversationId;
+            queryString["serviceUrl"] = resumptionCookie.Address.ServiceUrl;
+            queryString["channelId"] = resumptionCookie.Address.ChannelId;
+            queryString["locale"] = resumptionCookie.Locale ?? "en";
+
+            return TokenEncoder(queryString.ToString());
+        }
     }
 }
 
