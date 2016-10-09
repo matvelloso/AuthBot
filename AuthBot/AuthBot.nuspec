@@ -13,23 +13,23 @@
     <language>en-US</language>
     <tags>bot framework authentication azure o365 office bots conversational microsoft</tags>
     <dependencies>
-      <dependency id="Autofac" version="4.0.0-rc3-309" />
+      <dependency id="Autofac" version="4.1.1" />
       <dependency id="autorest" version="0.16.0" />
-      <dependency id="Chronic.Signed" version="0.3.2" />
+      <dependency id="Chronic.Signed" version="0.3.2" /> 
       <dependency id="Microsoft.AspNet.WebApi" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.WebHost" version="5.2.3" />
-      <dependency id="Microsoft.Bot.Builder" version="3.2.0" />
+      <dependency id="Microsoft.Bot.Builder" version="3.2.1" />
       <dependency id="Microsoft.Identity.Client" version="1.0.304142221-alpha" />
       <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="3.12.0" />
       <dependency id="Microsoft.IdentityModel.Logging" version="1.0.0" />
       <dependency id="Microsoft.IdentityModel.Protocol.Extensions" version="1.0.2.206221351" />
       <dependency id="Microsoft.IdentityModel.Tokens" version="5.0.0" />
-      <dependency id="Microsoft.Rest.ClientRuntime" version="1.8.2" />
+      <dependency id="Microsoft.Rest.ClientRuntime" version="2.3.2" />
       <dependency id="Microsoft.Win32.Primitives" version="4.0.1" />
       <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="3.2.1" />
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Newtonsoft.Json" version="9.0.2-beta1" />
       <dependency id="System.Collections" version="4.0.11" />
       <dependency id="System.Collections.Concurrent" version="4.0.12" />
       <dependency id="System.Diagnostics.Debug" version="4.0.11" />
