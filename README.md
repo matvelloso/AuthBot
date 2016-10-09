@@ -68,3 +68,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ### Release notes:
 
 3.0.3 - Added signin card support for Skype and custom prompt in the auth dialog constructor
+3.1.2 - Updates to use signin card, workaround for the resumption cookie introduced in the latest BotBuilder version, small fixes
